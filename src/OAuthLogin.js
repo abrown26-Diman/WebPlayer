@@ -1,11 +1,11 @@
 import React from "react";
-import { GoogleLogin } from "react-google-login";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const OAuthLogin = ({ onLoginSuccess }) => {
-  const handleLoginSuccess = (response) => {
-    const token = response.accessToken;
-    console.log("Access Token:", token);
-    onLoginSuccess(token); // Pass access token to parent component
+  const handleLoginSuccess = (credentialResponse) => {
+    const token = credentialResponse.credential; // Google token
+    console.log("Google OAuth Token:", token);
+    onLoginSuccess(token); // Pass token to parent component
   };
 
   const handleLoginFailure = (error) => {
@@ -13,17 +13,17 @@ const OAuthLogin = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div>
-      <h2>Login to YouTube</h2>
-      <GoogleLogin
-        clientId="218732270797-sldpk0fruhqre2f9tudb0udv18tk1ma3.apps.googleusercontent.com" // Replace with your actual Client ID
-        buttonText="Login with Google"
-        onSuccess={handleLoginSuccess}
-        onFailure={handleLoginFailure}
-        scope="https://www.googleapis.com/auth/youtube.readonly"
-      />
-    </div>
+    <GoogleOAuthProvider clientId="218732270797-sldpk0fruhqre2f9tudb0udv18tk1ma3.apps.googleusercontent.com">
+      <div>
+        <h2>Login to YouTube</h2>
+        <GoogleLogin
+          onSuccess={handleLoginSuccess}
+          onError={handleLoginFailure}
+        />
+      </div>
+    </GoogleOAuthProvider>
   );
 };
 
 export default OAuthLogin;
+
